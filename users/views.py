@@ -90,7 +90,7 @@ def login_api(request):
         login(request, user)
         return Response({"message": "로그인 성공!", "token": token.key}, status=status.HTTP_200_OK)
     
-    return Response({"error": "로그인 실패! 올바른 자격 증명을 입력하세요."}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"error": "로그인 실패!"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def logout_api(request):

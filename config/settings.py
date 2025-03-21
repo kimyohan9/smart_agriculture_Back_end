@@ -21,14 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-x0g7c$n$l+5#!pcp_6bl@$8lvqznwp!r31oq(yf8q8f!r!8d6p"
-
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 # LOGOUT_REDIRECT_URL = "/"
 
-
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",  # 프론트엔드 URL 추가
+]
 # Application definition
 AUTH_USER_MODEL = 'users.CustomUser'
 INSTALLED_APPS = [
@@ -46,14 +49,16 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.kakao", #카카오톡
-
+    'corsheaders',
     "users",
     "chatbot",
     "post",    
-    "crawled_data", 
+    "crawled_data",
+ 
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

@@ -58,3 +58,18 @@ class PostDeleteAPIView(APIView):
             post.delete()
             return Response({"message": "게시글이 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)
         return Response({"error": "삭제 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+
+# 게시글 수정
+class PostUpdateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        if post.author != request.user:
+            return Response({"error": "수정 권한이 없습니다."}, status=403)
+
+        serializer = PostSerializer(post, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)

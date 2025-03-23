@@ -1,6 +1,9 @@
 from django.urls import path
-from .views import soil_recommendation_view
+from .views import get_address_info_view, get_soil_data, crop_recommendation_view
 
 urlpatterns = [
-    path('', soil_recommendation_view, name='soil_recommendation'), 
+    path('address', get_address_info_view, name='address_info'), 
+    path('soildata', get_soil_data, name='soil_data'), 
+    path('recommendation', crop_recommendation_view, name='crop_recommendation'), 
+
 ]

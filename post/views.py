@@ -6,10 +6,14 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
 
 User = get_user_model()
 
 # 게시글 목록 및 생성
+@method_decorator(csrf_exempt, name='dispatch')
 class PostListAPIView(APIView):
     # permission_classes = [IsAuthenticated] #유저기능 완료후 권한 넣고 test
 

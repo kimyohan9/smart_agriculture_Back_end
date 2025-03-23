@@ -23,7 +23,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['bio', 'profile_picture', 'location']  # 프로필에 포함할 필드
+        fields = ['birthdate', 'region', 'crops', 'equipment']
+# serializers.py
+
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()  # 유저와 연결된 프로필 정보도 포함
@@ -51,3 +53,5 @@ class UserSerializer(serializers.ModelSerializer):
             profile.save()
 
         return instance
+# serializers.py
+

@@ -1,17 +1,21 @@
-from django.contrib.auth import authenticate ,logout,login
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
+from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+
 from .serializers import UserRegisterSerializer, UserSerializer, ProfileSerializer
-from rest_framework.exceptions import NotFound
-from django.contrib.auth import get_user_model
-from rest_framework.views import APIView
+from users.models import Profile
+
 import requests
-from rest_framework.permissions import IsAuthenticated 
-from django.views.decorators.csrf import csrf_exempt #일시적 로그인 오류해결 배포시 같이 삭제하기
-from users.models import Profile  # Profile 모델 임포트
+
 
 
 KAKAO_CLIENT_ID = "a6971a25bb35dc1113d81b5713a3ccc7"  # ✅ 여기에 본인의 카카오 REST API 키 입력
@@ -69,35 +73,51 @@ def kakao_login(request):
         "token": token.key
     }, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
-def register_api(request):
-    serializer = UserRegisterSerializer(data=request.data)
-    if serializer.is_valid():
-        user = serializer.save()
-        return Response({"message": "회원가입 성공!", "user_id": user.id}, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@method_decorator(csrf_exempt, name='dispatch')
+class RegisterView(APIView):
+    def post(self, request):
+        user_data = {
+            "username": request.data.get("username"),
+            "email": request.data.get("email"),
+            "password": request.data.get("password"),
+            "first_name": request.data.get("first_name"),  # ✅ 이름 받기
+        }
 
-@csrf_exempt # 포스트맨 테스트 csrf 토큰에러 일시 제거 베포시 삭제
+        profile_data = request.data.get("profile", {})
+
+        user_serializer = UserRegisterSerializer(data=user_data)
+        if user_serializer.is_valid():
+            user = user_serializer.save()
+
+            profile = Profile.objects.get(user=user)
+            profile.birthdate = profile_data.get("birthdate")
+            profile.region = profile_data.get("region")
+            profile.crops = profile_data.get("crops", "")
+            profile.equipment = profile_data.get("equipment", "")
+            profile.save()
+
+            return Response({"message": "회원가입 성공!", "user_id": user.id}, status=201)
+
+        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 @api_view(['POST'])
 def login_api(request):
-    
     username = request.data.get("username")
     password = request.data.get("password")
+
     user = authenticate(username=username, password=password)
-
-    if user:
+    if user is not None:
         token, created = Token.objects.get_or_create(user=user)
-        login(request, user)
-        return Response({"message": "로그인 성공!", "token": token.key}, status=status.HTTP_200_OK)
-    
-    return Response({"error": "로그인 실패! 올바른 자격 증명을 입력하세요."}, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['POST'])
-def logout_api(request):
-    user = request.user
-    Token.objects.filter(user=user).delete()
-    logout(request)
-    return Response({"message": "로그아웃 성공!"}, status=status.HTTP_200_OK)
+        return Response({
+            "message": "로그인 성공!",
+            "token": token.key,
+            "user_id": user.id,
+            "username": user.username
+        }, status=status.HTTP_200_OK)
+    else:
+        return Response({"message": "아이디 또는 비밀번호가 올바르지 않습니다."}, status=status.HTTP_401_UNAUTHORIZED)
 
 class ProfileView(APIView):
     """
@@ -115,27 +135,7 @@ class ProfileView(APIView):
         serializer = ProfileSerializer(profile)
         return Response(serializer.data) 
     
-        
-# class EditProfileView(APIView):
-#     """
-#     사용자가 자신의 프로필을 수정하는 API 뷰
-#     """
-#     parser_classes = (MultiPartParser, FormParser)  # 파일 업로드 처리
 
-#     def get(self, request):
-#         profile = request.user.profile  # 현재 로그인한 사용자의 프로필
-#         serializer = ProfileSerializer(profile)  # 프로필 직렬화
-#         return Response(serializer.data)  # GET 요청 시 현재 프로필 데이터 반환
-
-#     def post(self, request):
-#         profile = request.user.profile  # 현재 로그인한 사용자의 프로필
-#         serializer = ProfileSerializer(profile, data=request.data, partial=True)  # 수정된 데이터로 직렬화
-#         if serializer.is_valid():
-#             serializer.save()  # 유효한 데이터는 저장
-#             return Response({'message': '프로필이 수정되었습니다!'}, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# 회원 정보 수정 (이름, 이메일 등)
 class UserUpdateAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -157,3 +157,34 @@ class UserDeleteAPIView(APIView):
         user.save()
         return Response({"message": "회원 탈퇴가 완료되었습니다."}, status=status.HTTP_200_OK)
 
+
+
+class UserProfileAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        profile = user.profile
+
+        user_data = {
+            "first_name": user.first_name,  # ✅ 이름 추가
+            "username": user.username,
+            "email": user.email,
+            "birthdate": profile.birthdate,
+            "region": profile.region,
+            "crops": profile.crops,
+            "equipment": profile.equipment,
+        }
+        return Response(user_data, status=200)
+
+
+class CustomAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        return Response({
+            'token': token.key,
+            'user_id': token.user_id,
+            'username': token.user.username
+        })

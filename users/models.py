@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, User
 from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 class CustomUser(AbstractUser):
     pass
@@ -10,11 +12,22 @@ class CustomUser(AbstractUser):
     # def __str__(self):
     #     return self.username
     
+
 class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')  # 변경된 부분
-    bio = models.TextField(blank=True, null=True)  # 사용자의 소개글
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)  # 프로필 사진
-    location = models.CharField(max_length=100, blank=True, null=True)  # 위치
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,  # ✅ 여기가 핵심
+        on_delete=models.CASCADE,
+        related_name="profile"    
+        )
+    birthdate = models.DateField(null=True, blank=True)
+    region = models.CharField(max_length=100, blank=True)
+    crops = models.CharField(max_length=255, blank=True)
+    equipment = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return self.user.username
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)

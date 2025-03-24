@@ -1,18 +1,20 @@
-from django.contrib.auth import authenticate ,logout,login
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
+from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+
 from .serializers import UserRegisterSerializer, UserSerializer, ProfileSerializer
-from rest_framework.exceptions import NotFound
-from django.contrib.auth import get_user_model
-from rest_framework.views import APIView
+from users.models import Profile
+
 import requests
-from rest_framework.permissions import IsAuthenticated 
-from django.views.decorators.csrf import csrf_exempt #일시적 로그인 오류해결 배포시 같이 삭제하기
-from users.models import Profile  # Profile 모델 임포트
-from django.utils.decorators import method_decorator
 
 
 
@@ -78,6 +80,7 @@ class RegisterView(APIView):
             "username": request.data.get("username"),
             "email": request.data.get("email"),
             "password": request.data.get("password"),
+            "first_name": request.data.get("first_name"),  # ✅ 이름 받기
         }
 
         profile_data = request.data.get("profile", {})
@@ -86,7 +89,6 @@ class RegisterView(APIView):
         if user_serializer.is_valid():
             user = user_serializer.save()
 
-            # 이미 생성된 프로필 객체 가져와서 정보 입력
             profile = Profile.objects.get(user=user)
             profile.birthdate = profile_data.get("birthdate")
             profile.region = profile_data.get("region")
@@ -97,6 +99,7 @@ class RegisterView(APIView):
             return Response({"message": "회원가입 성공!", "user_id": user.id}, status=201)
 
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['POST'])
@@ -154,9 +157,7 @@ class UserDeleteAPIView(APIView):
         user.save()
         return Response({"message": "회원 탈퇴가 완료되었습니다."}, status=status.HTTP_200_OK)
 
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.views import APIView
+
 
 class UserProfileAPIView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -167,6 +168,7 @@ class UserProfileAPIView(APIView):
         profile = user.profile
 
         user_data = {
+            "first_name": user.first_name,  # ✅ 이름 추가
             "username": user.username,
             "email": user.email,
             "birthdate": profile.birthdate,
@@ -175,9 +177,7 @@ class UserProfileAPIView(APIView):
             "equipment": profile.equipment,
         }
         return Response(user_data, status=200)
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
+
 
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):

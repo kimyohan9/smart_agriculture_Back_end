@@ -1,4 +1,5 @@
 import json
+import re
 import requests  # requests 모듈 추가
 import xmltodict
 import os
@@ -84,6 +85,45 @@ class SoilExamRAG:
         docs = self.retriever.invoke(query)
         return "\n".join([doc.page_content for doc in docs]) if docs else ""
     
+    def contexttojson(self, context): #context를 json으로 변환. 
+        entries = re.split(r"\n: \d+\n", context.strip())
+        json_list = []
+        for entry in entries:
+            lines = entry.split("\n")         
+            entry_dict = {}
+        
+            for line in lines:
+                if ": " in line:
+                    key, value = line.split(": ", 1)
+                    entry_dict[key.strip()] = value.strip() if value.strip() != "NaN" else None
+                    json_list.append(entry_dict)
+        json_context = [dict(t) for t in {tuple(d.items()) for d in json_list}]
+        return json_context
+    
+    def add_doc(self,json_context, recommendation):
+        previous_data_dict = {entry["작물"]: entry for entry in json_context}
+        # 결과 저장 리스트
+        result = []
+
+        # 현재 JSON을 순회하며 이전 JSON 데이터와 결합
+        for rec in recommendation:
+            crop_name = rec["추천 작물"]
+            recommendation = rec["추천 이유"]
+            
+            # 이전 JSON에서 해당 작물 데이터를 가져오기
+            if crop_name in previous_data_dict:
+                crop_details = previous_data_dict[crop_name]
+            else:
+                crop_details = None  # 매칭되는 데이터가 없을 경우
+
+            # 최종 결과 추가
+            result.append({
+                "crop": crop_name,
+                "reason": recommendation,
+                "crop_info": crop_details
+            })
+        return result
+
     def get_recommendation(self):
         """토양 정보를 바탕으로 추천 작물 반환"""
         input_data = self.fetch_soil_data()
@@ -106,7 +146,7 @@ class SoilExamRAG:
                 {{
                     "추천 작물": "<추천할 작물>",
                     "추천 이유": "<추천한 이유>",
-                    "참고 문서": {context}
+                    
                 }}
                 """,
                 input_variables=["input_data", "context"]
@@ -118,8 +158,12 @@ class SoilExamRAG:
         parser = JsonOutputParser()
 
         chain = prompt | self.model | parser
-        response = chain.invoke({"input_data": input_data, "context": context})
-
+        recommendation = chain.invoke({"input_data": input_data, "context": context})
+        json_context = self.contexttojson(context)
+        
+        response = self.add_doc(json_context, recommendation)
+        # response = recommendation
+        
         return response
 
 

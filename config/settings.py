@@ -41,11 +41,13 @@ ALLOWED_HOSTS = ['*']
 
 
 #### acess permmision (외부 접속 허용 list)
-CORS_ALLOWED_ORIGINS = True
-# CORS_ALLOWED_ORIGINS = [
-#     "http://127.0.0.1:5500", # live server
-#     "https://aicropmate.com", # 구매한 domain
-# ]
+# CORS_ALLOWED_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5500", # live server
+    "http://127.0.0.1:5502", # live server
+    "http://127.0.0.1:3000", # 
+    "https://aicropmate.com", # 구매한 domain
+]
 
 
 #### Application definition
@@ -70,7 +72,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     
     
-    #### 외부 통신?
+    #### 외부 통신
     'corsheaders', 
 
     
@@ -148,7 +150,7 @@ DATABASES = {
 # kakao
 #############################################################################################
 
-    SOCIALACCOUNT_PROVIDERS = {
+SOCIALACCOUNT_PROVIDERS = {
     "kakao": {
         "APP": {
             "client_id": "a6971a25bb35dc1113d81b5713a3ccc7",  # ✅ 여기에 카카오 REST API 키 입력
@@ -218,10 +220,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
-] #카카오톡
+] # 카카오톡
 
 
 SITE_ID = 1  # Django 사이트 ID

@@ -118,11 +118,11 @@ AI 기반의 맞춤형 농업 지원 플랫폼으로, 사용자의 위치와 토
 API 문서를 제공합니다. (https://docs.google.com/spreadsheets/d/1Xkh334sfGg3QoqF4LsRJbUZzoSNluGOqZHoSaY4zB0g/edit?gid=0#gid=0) 에서 확인할 수 있습니다. 
 
 ## 기여 방법
-이 프로젝트를 포크합니다.
-새로운 브랜치를 생성합니다 (feature/새로운기능).
-변경 사항을 커밋합니다 (git commit -m 'Add 새로운 기능').
-브랜치에 푸시합니다 (git push origin feature/새로운기능).
-Pull Request를 생성합니다.
+- **이 프로젝트를 포크합니다.**
+- **새로운 브랜치를 생성합니다 (feature/새로운기능).**
+- **변경 사항을 커밋합니다 (git commit -m 'Add 새로운 기능').**
+- **브랜치에 푸시합니다 (git push origin feature/새로운기능).**
+- **Pull Request를 생성합니다.**
 
 ## 라이선스
 이 프로젝트는 MIT 라이선스를 따릅니다.

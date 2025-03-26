@@ -1,6 +1,6 @@
-🍀 프로젝트명 ” fArmIng “ 🍀
+# 🍀 프로젝트명 ” fArmIng “ 🍀
 
-🧑‍🌾 프로젝트 소개
+## 🧑‍🌾 프로젝트 소개
 
 귀농 귀촌인이 늘어남으로써 처음 농사 짓는사람들은 처음에 실수를 할 경우 다시 회복하기 쉽지 않는 경우를 많이 보 았습니다. 그래서 농사를 시작하기전에 최소한의 필요한 사전조사를 쉽게 할 수 있도록 도와주는 AI 서비스 입니다.
 
@@ -9,9 +9,9 @@ AI 기반의 맞춤형 농업 지원 플랫폼으로, 사용자의 위치와 토
 한 줄 정리 :  농사를 지으면서 필요한 데이터를 활용하여 작물, 비료를 추천해주는 AI 서비스
 
 
-🛠️ 기술 스택
+# 🛠️ 기술 스택
 언어: Python (Django, Django Rest Framework)
 데이터베이스: PostgresQL, ChromaDB
 LLM 및 데이터 처리: OpenAI API, LangChain
-# 웹소켓: Django Channels, Redis
+: 웹소켓: Django Channels, Redis
 배포: Docker, 

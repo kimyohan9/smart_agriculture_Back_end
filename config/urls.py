@@ -32,8 +32,8 @@ urlpatterns = [
     
     
     #### App
-    path("crawled_data/", include("crawled_data.urls"), name="crawl"),
     path("chatbot/", include("chatbot.urls")),
+    path("crawled_data/", include("crawled_data.urls"), name="crawl"),
     
     
     #### etc - 앱이 장고내에서는 안보이는데 삭제된 기능? 확인 필요

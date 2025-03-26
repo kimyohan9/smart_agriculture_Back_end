@@ -8,10 +8,48 @@ AI 기반의 맞춤형 농업 지원 플랫폼으로, 사용자의 위치와 토
 
 한 줄 정리 :  농사를 지으면서 필요한 데이터를 활용하여 작물, 비료를 추천해주는 AI 서비스
 
+## 주요 기능
+센서 데이터 수집 및 저장: 온도, 습도, 토양 수분 등의 데이터를 실시간으로 수집하고 저장
+사용자 관리: 회원가입, 로그인 및 인증 시스템 제공
+농업 환경 모니터링: 수집된 데이터를 분석하여 사용자에게 알림 및 대시보드 제공
+자동화 제어: 특정 조건이 충족될 경우 자동으로 농업 장비를 제어
+API 제공: RESTful API를 통해 외부 시스템과 연동 가능
 
-# 🛠️ 기술 스택
-언어: Python (Django, Django Rest Framework)
-데이터베이스: PostgresQL, ChromaDB
-LLM 및 데이터 처리: OpenAI API, LangChain
-: 웹소켓: Django Channels, Redis
-배포: Docker, 
+## 기술 스택
+언어: Java (Spring Boot)
+데이터베이스: MySQL
+서버 프레임워크: Spring Boot
+인증 및 보안: JWT (JSON Web Token)
+기타: JPA, Hibernate, Swagger API 문서화, Docker
+
+#설치 및 실행 방법
+
+## 1. 프로젝트 클론
+git clone https://github.com/kimyohan9/smart_agriculture_Back_end.git
+cd smart_agriculture_Back_end
+
+## 2. 환경 변수 설정
+.env 파일을 생성하고 필요한 설정 값을 추가합니다.
+DB_URL=jdbc:mysql://localhost:3306/smart_agriculture
+DB_USERNAME=root
+DB_PASSWORD=yourpassword
+JWT_SECRET=your_jwt_secret
+
+## 3. 종속성 설치 및 빌드
+./mvnw clean install
+
+## 4. 서버 실행
+./mvnw spring-boot:run
+
+## API 문서
+Swagger를 사용하여 API 문서를 제공합니다. 서버 실행 후 http://localhost:8080/swagger-ui/에서 확인할 수 있습니다.
+
+## 기여 방법
+이 프로젝트를 포크합니다.
+새로운 브랜치를 생성합니다 (feature/새로운기능).
+변경 사항을 커밋합니다 (git commit -m 'Add 새로운 기능').
+브랜치에 푸시합니다 (git push origin feature/새로운기능).
+Pull Request를 생성합니다.
+
+## 라이선스
+이 프로젝트는 MIT 라이선스를 따릅니다.

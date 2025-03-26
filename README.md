@@ -25,24 +25,29 @@ API 제공: RESTful API를 통해 외부 시스템과 연동 가능
 #설치 및 실행 방법
 
 ## 1. 프로젝트 클론
-git clone https://github.com/kimyohan9/smart_agriculture_Back_end.git
+```  git clone https://github.com/kimyohan9/smart_agriculture_Back_end.git
 cd smart_agriculture_Back_end
+``` 
 
 ## 2. 환경 변수 설정
-.env 파일을 생성하고 필요한 설정 값을 추가합니다.
+```  .env 파일을 생성하고 필요한 설정 값을 추가합니다.
 DB_URL=jdbc:mysql://localhost:3306/smart_agriculture
 DB_USERNAME=root
 DB_PASSWORD=yourpassword
 JWT_SECRET=your_jwt_secret
+``` 
 
 ## 3. 종속성 설치 및 빌드
-./mvnw clean install
+```  ./mvnw clean install ``` 
+
 
 ## 4. 서버 실행
-./mvnw spring-boot:run
+```  ./mvnw spring-boot:run ``` 
+
 
 ## API 문서
-Swagger를 사용하여 API 문서를 제공합니다. 서버 실행 후 http://localhost:8080/swagger-ui/에서 확인할 수 있습니다.
+Swagger를 사용하여 API 문서를 제공합니다. 서버 실행 후 http://localhost:8080/swagger-ui/ 에서 확인할 수 있습니다. 
+
 
 ## 기여 방법
 이 프로젝트를 포크합니다.

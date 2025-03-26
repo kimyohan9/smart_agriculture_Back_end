@@ -18,18 +18,20 @@ AI 기반의 맞춤형 농업 지원 플랫폼으로, 사용자의 위치와 토
   - 추천 시스템에 RAG 기능 추가
   - PostgreSQL 연결
 
-- **맹주형 (서기)**  
-  - 써주세요
+- **맹주형**  
+  - 데이터 전처리
+  - Frontend - html, js 수정
+  - Backend - Django App 수정
  
 - **이현수 (서기)**  
-  - Frontend html. js. css. 파일 구현
-  - Frontend 기능 구현 및 API 연결
+  - Frontend - html. js. css. 파일 구현
+  - Frontend - 기능 구현 및 API 연결
   - 흙토람 작물 데이터 전처리
   - 각종 문서 관리
     
 - **조규민**  
-  - backend 기본 기능(회원가입, 로그인, 프로필) 구현
-  - Frontend 보조
+  - backend - 기본 기능(회원가입, 로그인, 프로필) 구현
+  - Frontend - 보조
   - 데이터베이스 농사로 데이터 전처리
   
 ## 주요 기능

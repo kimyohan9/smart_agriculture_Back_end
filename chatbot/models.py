@@ -14,4 +14,8 @@ class Adressinformation(models.Model):
     pnu_code = models.CharField(max_length=20)
     address = models.JSONField()
     point = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.pnu_code
 

@@ -20,7 +20,7 @@ def get_address_info_view(request):
 
 def get_soil_data(request):
     #### parms
-    # PNU_Code = request.GET.get('address_information[id]', '4682041029107510000')
+    
     PNU_Code = request.GET.get('PNU_Code', '4682041029107510000')
     if not PNU_Code:
         return JsonResponse({"error": "PNU_Code를 찾을 수 없습니다."}, status=400)
@@ -37,7 +37,7 @@ def get_soil_data(request):
 
 def crop_recommendation_view(request):
     #### parms
-    # PNU_Code = request.GET.get('address_information[id]', '4682041029107510000')
+    
     PNU_Code = request.GET.get('PNU_Code', '4682041029107510000')
     if not PNU_Code:
         return JsonResponse({"error": "PNU_Code를 찾을 수 없습니다."}, status=400)
@@ -45,7 +45,7 @@ def crop_recommendation_view(request):
     #### 작물 추천
     rag_system = SoilExamRAG(PNU_Code=PNU_Code)
     recommendation = rag_system.get_recommendation()
-    # print(recommendation)
+  
     if not recommendation:
         return JsonResponse({"message": "토지 정보를 얻지 못하였습니다."}, status=404)
     
@@ -61,12 +61,13 @@ def get_add_to_soil_data(request):
     
     #### pnu 코드 및 좌표 값 추출
     if not address: return JsonResponse({"error": "주소를 입력해 주세요."}, status=400)
+    
     add_info = address_info(type, address)
     if not add_info: return JsonResponse({"error": "유효하지 않은 주소입니다."}, status=400)
     
     
     ######## get_soil_data
-    # print("\n", add_info, "\n")
+
     PNU_Code = add_info["id"]
     if not PNU_Code:
         return JsonResponse({"error": "PNU_Code를 찾을 수 없습니다."}, status=400)
@@ -89,6 +90,7 @@ def get_add_to_crop_recm(request):
     
     #### pnu 코드 및 좌표 값 추출
     if not address: return JsonResponse({"error": "주소를 입력해 주세요."}, status=400)
+    
     add_info = address_info(type, address)
     if not add_info: return JsonResponse({"error": "유효하지 않은 주소입니다."}, status=400)
     

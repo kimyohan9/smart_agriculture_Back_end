@@ -44,13 +44,14 @@ def soilexam(PNU_Code):
     """토양 정보를 가져오는 함수"""
     url = 'http://apis.data.go.kr/1390802/SoilEnviron/SoilExam/getSoilExam'
     load_dotenv()
-    service_key = os.getenv("Soilexam_API_KEY")
+    service_key = os.getenv("SOILEXAM_API_KEY")
     params = {'serviceKey': service_key, 'PNU_Code': PNU_Code}
     soil_response = requests.get(url, params=params)
 
     if soil_response.status_code != 200:
-        print(soil_response.text)
-        return None
+        soil = soil_response.text
+        print(soil)
+        return soil
     
     try:
         response_json = xmltodict.parse(soil_response.text)["response"]
@@ -64,7 +65,7 @@ class SoilExamRAG:
     
     def __init__(self, PNU_Code: str):
         load_dotenv()
-        open_api_key = os.getenv("opneai_API_KEY")
+        open_api_key = os.getenv("OPENAI_API_KEY")
         self.PNU_Code = PNU_Code        
         self.model = ChatOpenAI(model="gpt-4o-mini", api_key=open_api_key)
         self.embeddings = OpenAIEmbeddings(api_key=open_api_key)

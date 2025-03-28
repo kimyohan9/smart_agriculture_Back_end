@@ -49,10 +49,12 @@ def soilexam(PNU_Code):
     soil_response = requests.get(url, params=params)
 
     if soil_response.status_code != 200:
+        print(soil_response.text)
         return None
     
     try:
         response_json = xmltodict.parse(soil_response.text)["response"]
+        print(response_json["body"]["items"]["item"])
         return response_json["body"]["items"]["item"]
     except (KeyError, TypeError):
         return None
@@ -67,8 +69,8 @@ class SoilExamRAG:
         self.model = ChatOpenAI(model="gpt-4o-mini", api_key=open_api_key)
         self.embeddings = OpenAIEmbeddings(api_key=open_api_key)
         self.vector_store = Chroma(
-                # persist_directory="my_vector_store", # 로컬 테스트용 코드 
-                persist_directory="/my_vector_store", # 배포용 코드
+                persist_directory="my_vector_store", # 로컬 테스트용 코드 
+                # persist_directory="/my_vector_store", # 배포용 코드
                 embedding_function=self.embeddings,
                 )
         self.retriever = self.vector_store.as_retriever()

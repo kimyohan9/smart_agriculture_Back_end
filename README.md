@@ -11,8 +11,9 @@ AI 기반의 맞춤형 농업 지원 플랫폼으로, 사용자의 위치와 토
 # Smart 8 팀원
 
 - **김요한 (팀장)**  
-   -Frontend 구현
-   -Backend - django 보조 
+   - Frontend 구현
+   - Backend
+   - django 보조 
 
 - **신제창 (부팀장)**  
   - Backend LLM 기반 작물 추천 기능 구현

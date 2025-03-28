@@ -60,14 +60,15 @@ def soilexam(PNU_Code):
 class SoilExamRAG:
     """토양 정보 기반 추천 시스템"""
     
-    def __init__(self, PNU_Code: str, persist_dir="my_vector_store"):
+    def __init__(self, PNU_Code: str):
         load_dotenv()
         open_api_key = os.getenv("opneai_API_KEY")
         self.PNU_Code = PNU_Code        
         self.model = ChatOpenAI(model="gpt-4o-mini", api_key=open_api_key)
         self.embeddings = OpenAIEmbeddings(api_key=open_api_key)
         self.vector_store = Chroma(
-                persist_directory=persist_dir,
+                # persist_directory="my_vector_store", # 로컬 테스트용 코드 
+                persist_directory="/my_vector_store", # 배포용 코드
                 embedding_function=self.embeddings,
                 )
         self.retriever = self.vector_store.as_retriever()

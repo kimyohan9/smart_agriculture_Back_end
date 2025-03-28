@@ -37,14 +37,12 @@ class PostDetailAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, post_id):
-        """관리자만 댓글 작성 가능"""
-        if not request.user.is_staff:
-            return Response({"error": "관리자만 댓글을 작성할 수 있습니다."}, status=status.HTTP_403_FORBIDDEN)
-        
         post = get_object_or_404(Post, id=post_id)
+        request.data["post"] = post.id
         serializer = CommentSerializer(data=request.data)
+        
         if serializer.is_valid():
-            serializer.save(author=request.user, post=post)
+            serializer.save(author=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

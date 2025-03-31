@@ -211,7 +211,8 @@ AI 기반의 맞춤형 농업 지원 플랫폼으로, 사용자의 위치와 토
 
 # 서비스 아키텍처
 
-![시스템아키텍처](https://github.com/user-attachments/assets/516a8208-ef61-49b2-a1ec-8371a38185fc)
+![image](https://github.com/user-attachments/assets/49d9c8ef-5867-47b0-a79e-e369597630bd)
+
 
 ## 기술 스택
 ### **🔹 백엔드 (Backend)**

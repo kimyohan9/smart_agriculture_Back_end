@@ -213,6 +213,9 @@ AI 기반의 맞춤형 농업 지원 플랫폼으로, 사용자의 위치와 토
 
 ![image](https://github.com/user-attachments/assets/49d9c8ef-5867-47b0-a79e-e369597630bd)
 
+# ERD
+
+![image](https://github.com/user-attachments/assets/915474c6-42db-4b2a-b10b-f412f9f053f0)
 
 ## 기술 스택
 ### **🔹 백엔드 (Backend)**
